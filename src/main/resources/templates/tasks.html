@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>タスク一覧</title>
+
+<style>
+body {
+    background-color: #f5f5f5;
+    font-family: sans-serif;
+}
+
+.container {
+    width: 900px;
+    margin: 60px auto;
+}
+
+h1 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 25px;
+}
+
+.message-box {
+    background-color: #d9edf7;
+    color: #31708f;
+    padding: 15px;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.create-area {
+    text-align: right;
+    margin-top: 15px;
+}
+
+.new-btn {
+    background-color: #198754;
+    color: white;
+    padding: 9px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.logout-btn {
+    background-color: #6c757d;
+    color: white;
+    padding: 9px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+    margin-right: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    font-size: 13px;
+}
+
+th {
+    background-color: #212529;
+    color: white;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+tr:nth-child(even) {
+    background-color: #f1f1f1;
+}
+
+.edit-btn {
+    background-color: #0d6efd;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>タスク一覧</h1>
+
+    <div th:if="${tasks == null or #lists.isEmpty(tasks)}" class="message-box">
+        📭 現在タスクは登録されていません。「新規作成」から追加してください。
+    </div>
+
+    <table th:if="${tasks != null and !#lists.isEmpty(tasks)}">
+        <tr>
+            <th>ID</th>
+            <th>タイトル</th>
+            <th>内容</th>
+            <th>登録者</th>
+            <th>開始日</th>
+            <th>終了日</th>
+            <th>作成日時</th>
+            <th>更新日時</th>
+            <th>操作</th>
+        </tr>
+
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.id}"></td>
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.content}"></td>
+            <td th:text="${task.name}"></td>
+            <td th:text="${task.startDate}"></td>
+            <td th:text="${task.endDate}"></td>
+            <td th:text="${task.createdAt}"></td>
+            <td th:text="${task.updatedAt}"></td>
+            <td>
+                <a class="edit-btn"
+                   th:href="@{/tasks/edit/{id}(id=${task.id})}">
+                    編集
+                </a>
+
+                <form th:action="@{/tasks/delete/{id}(id=${task.id})}"
+                      method="post"
+                      style="display:inline;">
+                    <button type="submit" class="delete-btn">
+                        削除
+                    </button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <div class="create-area">
+        <a href="/logout" class="logout-btn">ログアウト</a>
+        <a href="/tasks/new" class="new-btn">＋ 新規作成</a>
+    </div>
+
+</div>
+
+</body>
+</html>
