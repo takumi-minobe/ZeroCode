@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sample.common.dao.mapper.LoginMapper">
+
+    <insert id="insert"
+            parameterType="sample.common.dao.entity.Login">
+        INSERT INTO login (
+            username,
+            password
+        )
+        VALUES (
+            #{username},
+            #{password}
+        )
+    </insert>
+
+    <select id="findByUsername"
+            parameterType="String"
+            resultType="sample.common.dao.entity.Login">
+        SELECT
+            id,
+            username,
+            password,
+            login_failed_count AS loginFailedCount,
+            account_locked AS accountLocked,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM login
+        WHERE username = #{username}
+    </select>
+
+    <update id="updateLoginFailedCount"
+            parameterType="sample.common.dao.entity.Login">
+        UPDATE login
+        SET
+            login_failed_count = #{loginFailedCount},
+            account_locked = #{accountLocked},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE username = #{username}
+    </update>
+
+    <update id="resetLoginFailedCount"
+            parameterType="String">
+        UPDATE login
+        SET
+            login_failed_count = 0,
+            account_locked = false,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE username = #{username}
+    </update>
+
+    <update id="updatePassword"
+            parameterType="sample.common.dao.entity.Login">
+        UPDATE login
+        SET
+            password = #{password},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE username = #{username}
+    </update>
+
+</mapper>

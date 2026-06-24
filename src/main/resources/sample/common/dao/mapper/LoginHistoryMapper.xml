@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sample.common.dao.mapper.LoginHistoryMapper">
+
+    <insert id="insert"
+            parameterType="sample.common.dao.entity.LoginHistory">
+
+        INSERT INTO login_history (
+            username,
+            login_result,
+            ip_address
+        )
+        VALUES (
+            #{username},
+            #{loginResult},
+            #{ipAddress}
+        )
+
+    </insert>
+
+    <select id="findAll"
+            resultType="sample.common.dao.entity.LoginHistory">
+
+        SELECT
+            id,
+            username,
+            login_result AS loginResult,
+            ip_address AS ipAddress,
+            login_datetime AS loginDatetime
+        FROM login_history
+        ORDER BY login_datetime DESC
+
+    </select>
+
+</mapper>

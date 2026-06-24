@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sample.common.dao.mapper.TaskMapper">
+
+    <select id="findAll" resultType="sample.common.dao.entity.Task">
+        SELECT
+            id,
+            username,
+            title,
+            content,
+            name,
+            start_date AS startDate,
+            end_date AS endDate,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM tasks
+        ORDER BY id DESC
+    </select>
+
+    <select id="findByUsername"
+            parameterType="String"
+            resultType="sample.common.dao.entity.Task">
+        SELECT
+            id,
+            username,
+            title,
+            content,
+            name,
+            start_date AS startDate,
+            end_date AS endDate,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM tasks
+        WHERE username = #{username}
+        ORDER BY id DESC
+    </select>
+
+    <select id="findByUsernameWithPaging"
+            resultType="sample.common.dao.entity.Task">
+        SELECT
+            id,
+            username,
+            title,
+            content,
+            name,
+            start_date AS startDate,
+            end_date AS endDate,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM tasks
+        WHERE username = #{username}
+        ORDER BY id DESC
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+
+    <select id="countByUsername"
+            parameterType="String"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM tasks
+        WHERE username = #{username}
+    </select>
+
+    <select id="search"
+            parameterType="sample.common.dao.entity.Task"
+            resultType="sample.common.dao.entity.Task">
+        SELECT
+            id,
+            username,
+            title,
+            content,
+            name,
+            start_date AS startDate,
+            end_date AS endDate,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM tasks
+        WHERE username = #{username}
+
+        <if test="searchTitle != null and searchTitle != ''">
+            AND title LIKE CONCAT('%', #{searchTitle}, '%')
+        </if>
+
+        <if test="searchStartDate != null and searchEndDate != null">
+            AND start_date BETWEEN #{searchStartDate} AND #{searchEndDate}
+        </if>
+
+        <if test="searchStartDate != null and searchEndDate == null">
+            AND start_date &gt;= #{searchStartDate}
+        </if>
+
+        <if test="searchStartDate == null and searchEndDate != null">
+            AND start_date &lt;= #{searchEndDate}
+        </if>
+
+        ORDER BY id DESC
+    </select>
+
+    <insert id="insert" parameterType="sample.common.dao.entity.Task">
+        INSERT INTO tasks (
+            username,
+            title,
+            content,
+            name,
+            start_date,
+            end_date
+        )
+        VALUES (
+            #{username},
+            #{title},
+            #{content},
+            #{name},
+            #{startDate},
+            #{endDate}
+        )
+    </insert>
+
+    <select id="findById" resultType="sample.common.dao.entity.Task">
+        SELECT
+            id,
+            username,
+            title,
+            content,
+            name,
+            start_date AS startDate,
+            end_date AS endDate,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM tasks
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByIdAndUsername"
+            resultType="sample.common.dao.entity.Task">
+        SELECT
+            id,
+            username,
+            title,
+            content,
+            name,
+            start_date AS startDate,
+            end_date AS endDate,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM tasks
+        WHERE id = #{id}
+          AND username = #{username}
+    </select>
+
+    <update id="update" parameterType="sample.common.dao.entity.Task">
+        UPDATE tasks
+        SET
+            title = #{title},
+            content = #{content},
+            name = #{name},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+          AND username = #{username}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tasks
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByIdAndUsername">
+        DELETE FROM tasks
+        WHERE id = #{id}
+          AND username = #{username}
+    </delete>
+
+</mapper>
